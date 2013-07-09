@@ -44,7 +44,7 @@ public class Server implements Runnable{
 		try {
 			input = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			output = new PrintWriter(client.getOutputStream(),true);
-			MathLogic logic = new MathLogic();
+			
 			String received = input.readLine();
 			if(received != null){
 				String receivedInput[] = received.split(",");
@@ -52,10 +52,10 @@ public class Server implements Runnable{
 				int b = Integer.parseInt(receivedInput[2]);
 				String operation = receivedInput[0];
 				if(operation.equals("a")){
-					output.write(logic.add(a, b));
+					output.write(MathLogic.add(a, b));
 					}
-				else if(operation.equals("s")){
-					output.write(logic.subtract(a, b));
+				else if(operation.equals("b")){
+					output.write(MathLogic.subtract(a, b));
 					}
 				output.flush();
 				input.close();

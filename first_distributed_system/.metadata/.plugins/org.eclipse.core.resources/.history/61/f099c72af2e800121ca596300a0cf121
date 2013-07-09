@@ -54,7 +54,7 @@ public class Server implements Runnable{
 				if(operation.equals("a")){
 					output.write(logic.add(a, b));
 					}
-				else if(operation.equals("s")){
+				else if(operation.equals("b")){
 					output.write(logic.subtract(a, b));
 					}
 				output.flush();

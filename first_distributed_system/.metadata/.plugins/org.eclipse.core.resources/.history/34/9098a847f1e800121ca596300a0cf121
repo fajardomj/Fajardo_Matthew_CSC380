@@ -20,7 +20,7 @@ public class Server implements Runnable{
 		} catch (IOException e) {			
 			e.printStackTrace();
 		}
-		while(true){
+		
 			Server server;
 			try{
 				Socket socket = serverSocket.accept();
@@ -31,7 +31,7 @@ public class Server implements Runnable{
 			}catch(IOException e){
 				System.out.println("Something went wrong");
 			}
-		}
+		
 
 	}
 	
@@ -54,7 +54,7 @@ public class Server implements Runnable{
 				if(operation.equals("a")){
 					output.write(logic.add(a, b));
 					}
-				else if(operation.equals("s")){
+				else if(operation.equals("b")){
 					output.write(logic.subtract(a, b));
 					}
 				output.flush();
