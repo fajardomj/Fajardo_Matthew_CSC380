@@ -1,0 +1,12 @@
+package client;
+import java.net.*;
+public class Client {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		Socket socket = new Socket(4359);
+	}
+
+}
