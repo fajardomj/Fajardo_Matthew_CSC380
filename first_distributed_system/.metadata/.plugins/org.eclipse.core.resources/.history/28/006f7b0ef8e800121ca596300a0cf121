@@ -58,7 +58,9 @@ public class Server implements Runnable{
 					output.write(logic.subtract(a, b));
 					}
 				output.flush();
-				client.close();
+				input.close();
+				output.close();
+				
 			}
 		}
 	catch (IOException e) {			
