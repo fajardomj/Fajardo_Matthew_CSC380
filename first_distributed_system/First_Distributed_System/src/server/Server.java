@@ -3,7 +3,9 @@ package server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
 import java.net.*;
 
 public class Server implements Runnable{
@@ -12,6 +14,39 @@ public class Server implements Runnable{
 	public Server(Socket client){
 		this.client = client;
 	}
+	
+	public Class getMethods(){
+		String response = "";
+		Method[] methods = null;
+		Class c = null;
+		try {
+			// Methodname, string-int ; Methodname, string-int;
+			c = Class.forName("server.MathLogic");
+			methods = c.getDeclaredMethods();		
+//			for(Method m : methods){
+//				response += m.getName() + ",";
+//				for(int i = 0; i < m.getParameterTypes().length; i++){
+//					if(i == m.getParameterTypes().length-1){
+//						response += m.getParameterTypes()[i] + ";";
+//					}
+//					else
+//					response += m.getParameterTypes()[i] + "-";
+//					
+//				}
+//					
+//			}			
+			
+			
+			
+		} catch (Exception e) {
+		
+			e.printStackTrace();
+		}
+		return c;
+	}
+	
+	
+	
 	public static void main(String[] args) {
 		ServerSocket serverSocket = null;
 		try {
@@ -44,29 +79,73 @@ public class Server implements Runnable{
 		try {
 			input = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			output = new PrintWriter(client.getOutputStream(),true);
-			MathLogic logic = new MathLogic();
+			ObjectOutputStream obs = new ObjectOutputStream(client.getOutputStream());
+			obs.writeObject(getMethods());
+			//output.write(getMethods() + "\n");			
+			obs.flush();
+			
 			String received = input.readLine();
 			if(received != null){
-				String receivedInput[] = received.split(",");
-				int a = Integer.parseInt(receivedInput[1]);
-				int b = Integer.parseInt(receivedInput[2]);
-				String operation = receivedInput[0];
-				if(operation.equals("a")){
-					output.write(logic.add(a, b));
+				String[] metadata= received.split(",|;");
+				String methodName = metadata[0];
+				String[] params = new String[metadata.length -1 ];
+				for(int i = 1; i < metadata.length; i++){
+					params[i-1] = metadata[i];
+					System.out.println(" param " + params[i-1]);
+				}
+				
+				System.out.println("Method name " + methodName);
+				Object[] o = new Object[params.length];
+				int count = 0;
+			
+				for(String s : params){
+					if(s != null){
+					String[] st = s.split("-");					
+					Class c = Class.forName(st[1]);
+					Method method = c.getMethod("valueOf",String.class);
+					o[count] = method.invoke(null, st[0]);
+					count++;
+
 					}
-				else if(operation.equals("s")){
-					output.write(logic.subtract(a, b));
+				}
+				MathLogic logic = new MathLogic();
+				for(Method m : MathLogic.class.getMethods()){
+					if(m.getName().equals(methodName)){
+						Object obj = m.invoke(logic, o);
+					System.out.println("object to send " + obj.toString());
+						output.println(obj);
+						output.flush();
 					}
-				output.flush();
+				}
+				
+				
+				
+				
 				client.close();
 			}
 		}
-	catch (IOException e) {			
+	catch (Exception e) {			
 			e.printStackTrace();
 		}
 		
 		
 		
+	}
+	public void placeholder(String received, PrintWriter output, MathLogic logic)
+	{
+		
+		
+		String receivedInput[] = received.split(",");
+		int a = Integer.parseInt(receivedInput[1]);
+		int b = Integer.parseInt(receivedInput[2]);
+		String operation = receivedInput[0];
+		if(operation.equals("add")){
+			output.write(logic.add(a, b));
+			}
+		else if(operation.equals("subtract")){
+			output.write(logic.subtract(a, b));
+			}
+		output.flush();
 	}
 
 }

@@ -1,0 +1,192 @@
+package client;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.PrintWriter;
+import java.lang.reflect.Method;
+import java.net.*;
+import java.util.Scanner;
+public class Client {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		Client c = new Client();
+		c.connectClient();
+		
+	}
+	public void connectClient()
+	{
+		
+		Socket socket = null;
+		PrintWriter output = null;
+		BufferedReader input = null;
+		
+		try {
+			socket = new Socket("localhost",4359);
+			output = new PrintWriter(socket.getOutputStream(),true);
+			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			ObjectInputStream ios = new ObjectInputStream(socket.getInputStream());
+			Class c = (Class)ios.readObject();
+			Method m = getUserInputReflection(c);
+			String params = getParamInput(m);
+			System.out.println("You chose " + m.getName() + " with params " + params);
+			
+			String display = input.readLine();
+			String displayToUser = formatDisplay(display);
+			System.out.println(displayToUser);
+			//output.write( + "\n");
+			output.flush();
+		
+			System.out.println("CLIENT: " + input.read());
+			
+		} catch (Exception e) {}
+		
+		
+	}
+	public String getParamInput(Method m) throws ClassNotFoundException{
+		Scanner scan = new Scanner(System.in);
+		String params = "";
+		boolean invalid = true;
+		for(Class c : m.getParameterTypes()){
+			while(invalid){
+				c = Class.forName(getPrimitiveType(c.getName()));
+			System.out.println("Please enter a " + c.getName());
+			String userInput = scan.nextLine();
+			try{
+			Method method = c.getMethod("valueOf",String.class);
+			params += method.invoke(null, userInput);
+			invalid = false;
+			}catch(Exception e){				
+				System.out.println("Invalid Input");
+				e.printStackTrace();
+			}
+			
+		}
+			}
+		return params;
+		
+	}
+	 public String getPrimitiveType(String name)
+	    {
+	        if (name.equals("byte")) return "java.lang.Byte";
+	        if (name.equals("short")) return "java.lang.Short";
+	        if (name.equals("int")) return "java.lang.Integer";
+	        if (name.equals("long")) return "java.lang.Long";
+	        if (name.equals("char")) return "java.lang.Character";
+	        if (name.equals("float")) return "java.lang.Float";
+	        if (name.equals("double")) return "java.lang.Double";
+	        if (name.equals("boolean")) return "java.lang.Boolean";
+
+	        return null;
+	    }
+	public Method getUserInputReflection(Class c){
+		boolean isInt = false;
+		Method[] methods = null;
+		int userChoice = -1;
+		Scanner scan = new Scanner(System.in);
+		do{
+		System.out.println("Choose a method to use based on number");		
+		methods = c.getDeclaredMethods();
+		int count = 0;
+		String response = "";
+		for(Method m : methods){
+			response += count + " " +m.getName() + "(";	
+			
+				for(int i = 0; i < m.getParameterTypes().length; i++){
+					if(i == m.getParameterTypes().length-1){
+						response += m.getParameterTypes()[i] + ")" + "\n";
+					}
+					else
+					response += m.getParameterTypes()[i] + ",";
+					
+				}
+				
+			count++;
+		}
+		System.out.println(response);
+		try{
+		userChoice = scan.nextInt();
+		isInt = true;
+		}
+		catch(Exception e){
+			
+		}
+	}while(!isInt);
+		return methods[userChoice];
+		
+	}
+	
+	
+	
+	
+	public String formatDisplay(String display){			
+			String[] methods = display.split(";");	
+			String[] methodOptions = new String[methods.length];
+			int count = 1;
+			String thisDisplay = "";
+		
+			for(String s : methods){
+				thisDisplay += count + " ";				
+				
+				String[] methods_params = s.split(",");
+				for(int i = 0; i < methods_params.length; i++){	
+					
+					if(i == 0){
+						thisDisplay += methods_params[i] +"(";
+					}
+					else if(i == methods_params.length - 1){
+						thisDisplay += methods_params[i] + ")";
+					}
+					else
+					thisDisplay += methods_params[i] + ",";
+				}	
+				count++;
+				thisDisplay += "\n";				
+			
+			}
+			thisDisplay = thisDisplay.replace('-', ',');
+			thisDisplay = thisDisplay.replaceAll("class ", "");
+			
+			return thisDisplay;			
+		
+	}
+	
+	
+	public String getUserInput(){
+	
+		String request = "";
+		System.out.println(" 1- Add \n 2- Subtract \n 3- Quit ");
+		Scanner scan = new Scanner(System.in);
+		try{
+		int userInput = scan.nextInt();
+		System.out.println("Please enter two numbers you want to " + request + " Example 2,2");
+		String numbers = scan.next();
+		String input[] = numbers.split(",");		
+		int a = Integer.parseInt(input[0]);
+		int b = Integer.parseInt(input[1]);
+		
+		if(userInput == 1){
+			
+			request = "add," + a +","+ b;
+		}
+		else if(userInput == 2){
+			
+			request = "subtract," + a +","+ b;
+		}
+		else{
+			System.exit(0);
+		}
+		}catch(Exception e){
+			System.out.println("Invalid Input");
+		}	
+		scan.close();
+		return request;
+	}
+	
+	
+	
+
+}

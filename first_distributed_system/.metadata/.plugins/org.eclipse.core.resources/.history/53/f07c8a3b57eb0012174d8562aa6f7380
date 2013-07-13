@@ -1,0 +1,14 @@
+package server;
+
+public class Methods {
+	private String type;
+	private String name;
+	private int paramCount;
+	private String returnType;
+	
+
+	public Methods(String name, String...type) {
+		
+	}
+
+}

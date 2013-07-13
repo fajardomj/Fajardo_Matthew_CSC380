@@ -1,0 +1,134 @@
+package server;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.lang.reflect.Method;
+import java.net.*;
+
+public class Server implements Runnable{
+	private Socket client;
+	
+	public Server(Socket client){
+		this.client = client;
+	}
+	
+	public Class getMethods(){
+		String response = "";
+		Method[] methods = null;
+		Class c = null;
+		try {
+			// Methodname, string-int ; Methodname, string-int;
+			c = Class.forName("server.MathLogic");
+			methods = c.getDeclaredMethods();		
+//			for(Method m : methods){
+//				response += m.getName() + ",";
+//				for(int i = 0; i < m.getParameterTypes().length; i++){
+//					if(i == m.getParameterTypes().length-1){
+//						response += m.getParameterTypes()[i] + ";";
+//					}
+//					else
+//					response += m.getParameterTypes()[i] + "-";
+//					
+//				}
+//					
+//			}			
+			
+			
+			
+		} catch (Exception e) {
+		
+			e.printStackTrace();
+		}
+		return c;
+	}
+	
+	
+	
+	public static void main(String[] args) {
+		ServerSocket serverSocket = null;
+		try {
+			serverSocket = new ServerSocket(4359);
+			
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}
+		while(true){
+			Server server;
+			try{
+				Socket socket = serverSocket.accept();
+				server = new Server(socket);
+				Thread request = new Thread(server);
+				request.start();				
+				
+			}catch(IOException e){
+				System.out.println("Something went wrong");
+			}
+		}
+
+	}
+	
+	@Override
+	public void run() {
+		
+		System.out.println("SERVER: listening to new Client");
+		BufferedReader input = null;
+		PrintWriter output = null;
+		try {
+			input = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			output = new PrintWriter(client.getOutputStream(),true);
+			ObjectOutputStream obs = new ObjectOutputStream(client.getOutputStream());
+			obs.writeObject(getMethods());
+			//output.write(getMethods() + "\n");
+			
+			obs.flush();
+			
+			String received = input.readLine();
+			if(received != null){
+				String[] metadata= received.split(",|;");
+				String methodName = metadata[0];
+				String[] params = new String[metadata.length-1];
+				for(int i = 1; i < metadata.length; i ++){
+					params[i] = metadata[i];
+					System.out.println(" param " + metadata[i]);
+				}
+				received.split(";");
+				System.out.println("Method name " + methodName);
+				
+				for(String s : params){
+					Class c = Class.forName(s);
+					Method method = c.getMethod("valueOf",String.class);
+				}
+				
+				
+				//params += method.invoke(null, userInput) + "-" + c.getName()+ ",";
+				client.close();
+			}
+		}
+	catch (Exception e) {			
+			//e.printStackTrace();
+		}
+		
+		
+		
+	}
+	public void placeholder(String received, PrintWriter output, MathLogic logic)
+	{
+		
+		
+		String receivedInput[] = received.split(",");
+		int a = Integer.parseInt(receivedInput[1]);
+		int b = Integer.parseInt(receivedInput[2]);
+		String operation = receivedInput[0];
+		if(operation.equals("add")){
+			output.write(logic.add(a, b));
+			}
+		else if(operation.equals("subtract")){
+			output.write(logic.subtract(a, b));
+			}
+		output.flush();
+	}
+
+}

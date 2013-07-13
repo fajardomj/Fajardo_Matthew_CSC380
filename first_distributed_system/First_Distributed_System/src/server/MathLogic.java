@@ -1,5 +1,8 @@
 package server;
-public class MathLogic {
+
+import java.io.Serializable;
+
+public class MathLogic implements Serializable {
 	
 	public MathLogic(){
 		
@@ -12,5 +15,6 @@ public class MathLogic {
 		System.out.println("SERVER: " + a + " - " + b);
 		return a - b;
 	}
+	
 
 }

@@ -1,0 +1,9 @@
+package server;
+
+public class Methods {
+
+	public Methods() {
+		// TODO Auto-generated constructor stub
+	}
+
+}
