@@ -29,6 +29,12 @@ public class Client {
 			output = new PrintWriter(socket.getOutputStream(),true);
 			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			ObjectInputStream ios = new ObjectInputStream(socket.getInputStream());
+			String[] classes =(String[]) ios.readObject();
+			
+			String className = chooseClass(classes);
+			output.write(className + "\n");
+			output.flush();
+			
 			Class c = (Class)ios.readObject();
 			Method m = getUserInputReflection(c);
 			String params = getParamInput(m);
@@ -38,9 +44,35 @@ public class Client {
 		
 			System.out.println("CLIENT: " + input.readLine());
 			
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		
+	}
+	public String chooseClass(String[] classes){
+		boolean invalid = true;
+		int index = -1;
+		try{
+		while(invalid){
+		int count = 0;
+		System.out.println("Choose a class");
+		for(String cl : classes){
+			System.out.println(count + " class name: " + cl);
+			count++;
+		}
+		Scanner scan = new Scanner(System.in);
+		index = scan.nextInt();
+		invalid = false;
+		}
+		
+		}
+		
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return classes[index];
 	}
 	public String getParamInput(Method m) throws ClassNotFoundException{
 		Scanner scan = new Scanner(System.in);
@@ -53,8 +85,14 @@ public class Client {
 			System.out.println("Please enter a " + c.getName());
 			String userInput = scan.nextLine();
 			try{
+				if(!c.getName().equals("java.lang.String")){
 			Method method = c.getMethod("valueOf",String.class);
 			params += method.invoke(null, userInput) + "-" + c.getName()+ ",";
+				}
+				else
+				{
+					params += userInput +"-" + c.getName() + ",";
+				}
 			invalid = false;
 			}catch(Exception e){				
 				System.out.println("Invalid Input");
@@ -67,7 +105,7 @@ public class Client {
 		
 	}
 	 public String getPrimitiveType(String name)
-	    {
+	    {		
 	        if (name.equals("byte")) return "java.lang.Byte";
 	        if (name.equals("short")) return "java.lang.Short";
 	        if (name.equals("int")) return "java.lang.Integer";
@@ -77,7 +115,7 @@ public class Client {
 	        if (name.equals("double")) return "java.lang.Double";
 	        if (name.equals("boolean")) return "java.lang.Boolean";
 
-	        return null;
+	        return name;
 	    }
 	public Method getUserInputReflection(Class c){
 		boolean isInt = false;
@@ -90,17 +128,22 @@ public class Client {
 		int count = 0;
 		String response = "";
 		for(Method m : methods){
+			boolean inside = false;
 			response += count + " " +m.getName() + "(";	
 			
 				for(int i = 0; i < m.getParameterTypes().length; i++){
+					inside = true;
 					if(i == m.getParameterTypes().length-1){
 						response += m.getParameterTypes()[i] + ")" + "\n";
 					}
 					else
 					response += m.getParameterTypes()[i] + ",";
 					
+					
 				}
-				
+				if(!inside){
+					response += ")" + "\n";
+				}
 			count++;
 		}
 		System.out.println(response);

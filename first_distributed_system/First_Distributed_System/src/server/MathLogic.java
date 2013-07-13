@@ -2,7 +2,7 @@ package server;
 
 import java.io.Serializable;
 
-public class MathLogic implements Serializable {
+public class MathLogic implements ReflectionParent, Serializable {
 	
 	public MathLogic(){
 		

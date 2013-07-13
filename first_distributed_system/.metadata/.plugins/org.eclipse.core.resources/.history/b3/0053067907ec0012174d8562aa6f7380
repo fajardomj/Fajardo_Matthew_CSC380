@@ -1,0 +1,9 @@
+package server;
+
+public class WordsLogic {
+
+	public WordsLogic() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

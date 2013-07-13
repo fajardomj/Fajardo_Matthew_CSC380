@@ -1,0 +1,9 @@
+package server;
+
+public class ReflectionParent {
+
+	public ReflectionParent() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

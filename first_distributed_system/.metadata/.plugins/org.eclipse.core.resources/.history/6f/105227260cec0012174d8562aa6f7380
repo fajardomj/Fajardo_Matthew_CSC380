@@ -1,0 +1,26 @@
+package server;
+
+import java.io.Serializable;
+import java.util.Random;
+
+public class WordsLogic implements Serializable {
+
+	private String[] words = {"Hi","hello","orange","computer"};
+	private static WordsLogic INSTANCE = null;
+	private WordsLogic() {
+		
+	}
+	public static WordsLogic getInstance(){
+		if(INSTANCE == null){
+			INSTANCE = new WordsLogic();
+		}
+		return INSTANCE;
+	}
+	
+	public String getRandomWord(){
+		Random random = new Random();
+		int index = random.nextInt(words.length);
+		return words[index];
+	}
+
+}

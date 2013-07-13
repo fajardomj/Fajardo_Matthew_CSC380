@@ -1,0 +1,16 @@
+package server;
+
+public class ReflectionParent {
+
+	/**
+	 * Every Logic class that the user can call needs to extend this class
+	 */
+	public ReflectionParent() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Class[] getClasses(){
+	return this.getClass().getClasses();
+	}
+
+}
