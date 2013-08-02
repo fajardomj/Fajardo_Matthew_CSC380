@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2001/12/soap-envelope"
+               soap:encodingStyle="http://www.w3.org/2001/12/soap-encoding">
+
+    <soap:Body xmlns:ms="http://localhost:8080/restaurants">
+        <ms:placeOrder>
+            <ms:restaurant>
+                <ms:id></ms:id>
+                <ms:name>Pizza Hut</ms:name>
+            </ms:restaurant>
+            <ms:menuItem>
+                <ms:name>Pizza</ms:name>
+            </ms:menuItem>
+        </ms:placeOrder>
+    </soap:Body>
+
+</soap:Envelope>

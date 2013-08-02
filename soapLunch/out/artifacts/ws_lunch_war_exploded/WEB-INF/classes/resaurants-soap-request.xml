@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<Envelope xmlns="http://www.w3.org/2001/12/soap-envelope">
+    <Body xmlns:m="http://localhost:8080/order">
+        <m:getRestaurants/>
+    </Body>
+</Envelope>
