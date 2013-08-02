@@ -39,7 +39,7 @@ public class MenuHandler extends HttpServlet {
             responseEnv.setEncodingStyle("application/soap+xml");
             JAXBContext resContext = JAXBContext.newInstance("menuResponse");
             Marshaller marshaller = resContext.createMarshaller();
-            marshaller.marshal(envelope,response.getOutputStream());
+            marshaller.marshal(responseEnv,response.getOutputStream());
 
 
 

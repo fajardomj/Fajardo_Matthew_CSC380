@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://localhost:8080/order" xmlns:s="http://www.w3.org/2001/12/soap-envelope" xmlns:m="http://localhost:8080/order">
-    <xs:import namespace="http://www.w3.org/2001/12/soap-envelope" schemaLocation="resaurants-soap-request.xsd"/>
-    <xs:element name="getRestaurants">
-        <xs:complexType/>
-    </xs:element>
-</xs:schema>

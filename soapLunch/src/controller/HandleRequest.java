@@ -34,7 +34,7 @@ public class HandleRequest extends HttpServlet {
             responseEnv.setEncodingStyle("application/soap+xml");
             JAXBContext resContext = JAXBContext.newInstance("restaurantResponse");
             Marshaller marshaller = resContext.createMarshaller();
-            marshaller.marshal(envelope,response.getOutputStream());
+            marshaller.marshal(responseEnv,response.getOutputStream());
 
 
 
