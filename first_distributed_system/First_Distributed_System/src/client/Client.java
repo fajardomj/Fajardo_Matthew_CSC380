@@ -138,8 +138,6 @@ public class Client {
 					}
 					else
 					response += m.getParameterTypes()[i] + ",";
-					
-					
 				}
 				if(!inside){
 					response += ")" + "\n";
