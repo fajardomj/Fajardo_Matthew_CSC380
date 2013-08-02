@@ -25,9 +25,6 @@ import java.io.IOException;
 public class MenuHandler extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            JAXBContext reqContext = JAXBContext.newInstance("menuRequest");
-            Unmarshaller reqUm = reqContext.createUnmarshaller();
-            menuRequest.Envelope envelope = (menuRequest.Envelope)reqUm.unmarshal(request.getInputStream());
             menuResponse.MenuItem item = new menuResponse.MenuItem();
             item.setName("Pizza");
             menuResponse.GetMenuItemsResponse menuResponse = new GetMenuItemsResponse();

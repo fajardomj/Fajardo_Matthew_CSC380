@@ -20,9 +20,6 @@ public class HandleRequest extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws javax.servlet.ServletException, IOException {
         try {
-            JAXBContext reqContext = JAXBContext.newInstance("restaurantRequest");
-            Unmarshaller reqUm = reqContext.createUnmarshaller();
-            restaurantRequest.Envelope envelope = (restaurantRequest.Envelope)reqUm.unmarshal(request.getInputStream());
             restaurantResponse.Restaurant restaurant = new restaurantResponse.Restaurant();
             restaurant.setName("Pizza Hut");
             GetAllRestaurantsResponse restaurantsResponse = new GetAllRestaurantsResponse();
